@@ -1,0 +1,17 @@
+---
+
+- name: Install required packages
+  package:
+    name:  '{{ item }}'
+    state: present
+  with_items: '{{ smsshell__packages_names }}'
+
+- name: Install SMSShell program
+  git:
+    repo:    '{{ smsshell__repository_url }}'
+    dest:    '{{ smsshell__install_path }}'
+    clone:   True
+    version: '{{ smsshell__repository_version }}'
+    update:  '{{ smsshell__git_update }}'
+    force:   True
+  notify: [ 'restart-smsshell' ]

@@ -1,0 +1,33 @@
+;
+; {{ ansible_managed }}
+;
+
+
+[main]
+pid = {{ smsshell__service_pidfile }}
+
+log_level = {{ smsshell__log_level }}
+log_target = {{ smsshell__log_target }}
+
+{% if smsshell__service_user is defined %}
+user = {{ smsshell__service_user }}
+{% endif %}
+{% if smsshell__service_group is defined %}
+group = {{ smsshell__service_group }}
+{% endif %}
+
+mode = {{ smsshell__mode|upper }}
+
+
+{% if smsshell__mode|lower == 'daemon' %}
+[daemon]
+receiver_type = {{ smsshell__receiver_type }}
+transmitter_type = {{smsshell__transmitter_type }}
+message_parser = {{ smsshell__message_parser }}
+session_ttl = {{ smsshell__session_ttl|int }}
+
+
+[receiver]
+path = {{ smsshell__receiver_path }}
+listen_queue = {{ smsshell__receiver_listen_queue }}
+{% endif %}

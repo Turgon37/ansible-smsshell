@@ -1,0 +1,10 @@
+---
+
+- name: Create configuration file
+  template:
+    src:   config.j2
+    dest:  '{{ smsshell__configuration_file_path }}'
+    owner: root
+    group: root
+    mode:  0640
+  notify: [ 'restart-smsshell' ]

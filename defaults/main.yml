@@ -1,0 +1,90 @@
+---
+# defaults file for smsshell
+
+# Simple placeholder to allow other roles to detect this role
+smsshell__role: True
+
+# Enable facts deploiement
+smsshell__facts: True
+
+# List of required packages
+smsshell__packages_names:
+  - git
+
+# URL of the SMSShell repository
+smsshell__repository_url: https://github.com/Turgon37/SMSShell.git
+
+# What version of IPCheck to retrieve
+smsshell__repository_version: v1.0.0
+
+# Path to install SMSShell
+smsshell__install_path: /opt/SMSShell
+
+# Allow automatic git pull on each ansible run
+smsshell__git_update: False
+
+
+### SERVICE CONFIGURATION
+# If theses options are defined the program's
+# privileges will be downgrade to this user and group rights
+# User to run smsshell as
+#smsshell__service_user: smsshell
+# Group to run smsshell as
+#smsshell__service_group: '{{ smsshell__service_user }}'
+
+# The name of the service to use
+smsshell__service_name: smsshell
+smsshell__service_enabled: True
+
+# Path to service executable
+smsshell__executable: '{{ smsshell__install_path }}/bin/sms-shell-launcher'
+# Path to pidfile
+smsshell__service_pidfile: /var/run/smsshell.pid
+
+# The path to the configuration file
+smsshell__configuration_file_path: /etc/smsshell.conf
+
+
+### GENERAL CONFIGURATION
+# Main fonctionnal mode in (daemon, standalone)
+smsshell__mode: daemon
+
+# Set LOG level for message filtering in
+#  ERROR, WARN, INFO, DEBUG, INFO
+# Be careful, at debug level, some sensible message (such as passwords)
+#  can be logged
+smsshell__log_level: INFO
+
+# Set LOG target in
+#  SYSLOG, STDERR, STDOUT, 'A path to a file'
+smsshell__log_target: STDOUT
+
+
+### DAEMON CONFIGURATION
+# The type of input message receiver in
+#  (unix,fifo)
+smsshell__receiver_type: unix
+
+# The type of output message transmitter in
+#  (stdout)
+smsshell__transmitter_type: stdout
+
+# The type of message parser, each message
+# received by the receiver will be parsed by this item.
+# in (json)
+smsshell__message_parser: json
+
+# Maximum lifetime of idle shell sessions
+smsshell__session_ttl: 600
+
+
+## RECEIVER CONFIGURATION
+# The path to the receiver file is required
+# For unix type : the path to the unix socket
+# For fifo type : the path to the fifo file
+smsshell__receiver_path: "/var/run/smsshell.{{ 'fifo' if smsshell__receiver_type == 'fifo' else 'sock' }}"
+
+# Sockets listen queue
+# the number of unaccepted connections that the system will allow before refusing new connections.
+# This apply only on network/unix socket
+smsshell__receiver_listen_queue: 10

@@ -1,0 +1,7 @@
+---
+# handlers file for smsshell
+
+- name: restart-smsshell
+  service:
+    name:  '{{ smsshell__service_name }}'
+    state: restarted

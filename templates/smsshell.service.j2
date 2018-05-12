@@ -1,0 +1,12 @@
+[Unit]
+Description=SMSShell
+Documentation=https://github.com/Turgon37/SMSShell
+After=network.target gammu-smsd.service
+
+[Service]
+Type=forking
+PIDFile={{ smsshell__service_pidfile }}
+ExecStart={{ smsshell__executable }} --config-file={{ smsshell__configuration_file_path }} --pid-file={{ smsshell__service_pidfile }} --background
+
+[Install]
+WantedBy=multi-user.target

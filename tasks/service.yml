@@ -1,0 +1,23 @@
+---
+
+- name: Install smsshell.service systemd unit file
+  template:
+    src:   smsshell.service.j2
+    dest:  "/etc/systemd/system/{{ smsshell__service_name }}.service"
+    owner: root
+    group: root
+    mode:  0755
+  when: ansible_service_mgr == 'systemd'
+  register: _smsshell__service
+  notify: [ 'restart-smsshell' ]
+
+- name: Reload systemd
+  systemd:
+    daemon_reload: yes
+  when: ansible_service_mgr == 'systemd' and _smsshell__service is changed
+
+- name: Ensure SMSShell is started and enabled on boot
+  service:
+    name:    '{{ smsshell__service_name }}'
+    enabled: '{{ smsshell__service_enabled|bool }}'
+    state:   "{{ smsshell__service_enabled|bool|ternary('started', 'stopped') }}"

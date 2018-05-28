@@ -8,6 +8,7 @@ pid = {{ smsshell__service_pidfile }}
 
 log_level = {{ smsshell__log_level }}
 log_target = {{ smsshell__log_target }}
+log_format = {{ smsshell__log_format }}
 
 {% if smsshell__service_user is defined %}
 user = {{ smsshell__service_user }}
@@ -29,5 +30,6 @@ session_ttl = {{ smsshell__session_ttl|int }}
 
 [receiver]
 path = {{ smsshell__receiver_path }}
+umask = {{ smsshell__receiver_umask }}
 listen_queue = {{ smsshell__receiver_listen_queue }}
 {% endif %}

@@ -7,6 +7,9 @@ smsshell__role: True
 # Enable facts deploiement
 smsshell__facts: True
 
+
+### INSTALL CONFIGURATION
+# ---------------------------------------
 # List of required packages
 smsshell__packages_names:
   - git
@@ -28,18 +31,32 @@ smsshell__git_update: False
 # If theses options are defined the program's
 # privileges will be downgrade to this user and group rights
 # User to run smsshell as
-#smsshell__service_user: smsshell
+smsshell__service_user: smsshell
 # Group to run smsshell as
-#smsshell__service_group: '{{ smsshell__service_user }}'
+smsshell__service_group: '{{ smsshell__service_user }}'
+
+# Use service user/group (above) default user on service start
+# If set to False, the service must be started with root privileges
+smsshell__run_service_as_native_user: True
 
 # The name of the service to use
 smsshell__service_name: smsshell
+
+# If true, the service will be enabled and started
+# otherwise, it will be disabled and stopped
 smsshell__service_enabled: True
 
 # Path to service executable
 smsshell__executable: '{{ smsshell__install_path }}/bin/sms-shell-launcher'
+
+# Where to store working datas
+smsshell__service_var_directory: /var/lib/smsshell
+
+# Path to service runtime directory
+smsshell__service_run_directory: '/var/run{% if smsshell__run_service_as_native_user %}/smsshell{% endif %}'
+
 # Path to pidfile
-smsshell__service_pidfile: /var/run/smsshell.pid
+smsshell__service_pidfile: '{{ smsshell__service_run_directory }}/smsshell.pid'
 
 # The path to the configuration file
 smsshell__configuration_file_path: /etc/smsshell.conf
@@ -58,6 +75,10 @@ smsshell__log_level: INFO
 # Set LOG target in
 #  SYSLOG, STDERR, STDOUT, 'A path to a file'
 smsshell__log_target: STDOUT
+
+# The log format. See https://docs.python.org/3/library/logging.html#logrecord-attributes for available tokens
+# Don't forget to escape percent with a double percent
+#smsshell__log_format: %%(name)s[%%(process)d]: %%(levelname)s %%(message)s
 
 
 ### DAEMON CONFIGURATION
@@ -82,9 +103,12 @@ smsshell__session_ttl: 600
 # The path to the receiver file is required
 # For unix type : the path to the unix socket
 # For fifo type : the path to the fifo file
-smsshell__receiver_path: "/var/run/smsshell.{{ 'fifo' if smsshell__receiver_type == 'fifo' else 'sock' }}"
+smsshell__receiver_path: "{{ smsshell__service_run_directory }}/smsshell.{{ 'fifo' if smsshell__receiver_type == 'fifo' else 'sock' }}"
 
 # Sockets listen queue
 # the number of unaccepted connections that the system will allow before refusing new connections.
 # This apply only on network/unix socket
 smsshell__receiver_listen_queue: 10
+
+# The umask the daemon will use to create socket and fifo
+smsshell__receiver_umask: '0117'

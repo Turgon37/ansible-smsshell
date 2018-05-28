@@ -5,8 +5,14 @@ After=network.target gammu-smsd.service
 
 [Service]
 Type=forking
+{% if smsshell__run_service_as_native_user %}
+User={{ smsshell__service_user }}
+Group={{ smsshell__service_group }}
+RuntimeDirectory={{ smsshell__service_run_directory|basename }}
+{% endif %}
 PIDFile={{ smsshell__service_pidfile }}
 ExecStart={{ smsshell__executable }} --config-file={{ smsshell__configuration_file_path }} --pid-file={{ smsshell__service_pidfile }} --background
+#ExecReload=/bin/kill -HUP $MAINPID
 
 [Install]
 WantedBy=multi-user.target

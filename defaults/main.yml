@@ -59,7 +59,7 @@ smsshell__service_name: smsshell
 smsshell__service_enabled: True
 
 # Path to service executable
-smsshell__executable: '{{ smsshell__install_path }}/bin/sms-shell-launcher'
+smsshell__executable: '{{ smsshell__service_virtual_env_directory }}/bin/python3 {{ smsshell__install_path }}/bin/sms-shell-launcher'
 
 # Where to store working datas
 smsshell__service_var_directory: /var/lib/smsshell
@@ -106,7 +106,7 @@ smsshell__receiver_type: unix
 
 # The type of output message transmitter in
 #  (stdout)
-smsshell__transmitter_type: stdout
+smsshell__transmitter_type: python_gammu
 
 # The type of message parser, each message
 # received by the receiver will be parsed by this item.
@@ -135,3 +135,9 @@ smsshell__receiver_listen_queue: 10
 
 # The umask the daemon will use to create socket and fifo
 smsshell__receiver_umask: '0117'
+
+
+## TRANSMITTER CONFIGURATION
+# The path to the gammu-smsdrc configuration of the currently running
+# gammu-smsd daemon
+smsshell__transmitter_smsdrc_configuration: /etc/gammu-smsdrc

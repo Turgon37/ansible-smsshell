@@ -33,4 +33,8 @@ path = {{ smsshell__receiver_path }}
 umask = {{ smsshell__receiver_umask }}
 group = {{ smsshell__receiver_group }}
 listen_queue = {{ smsshell__receiver_listen_queue }}
+
+[transmitter]
+; The path to the gammu-smsdrc configuration
+smsdrc_configuration = {{ smsshell__transmitter_smsdrc_configuration }}
 {% endif %}

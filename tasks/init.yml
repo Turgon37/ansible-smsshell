@@ -6,5 +6,5 @@
       - smsshell__mode in ['standalone', 'daemon']
       - smsshell__receiver_type in ['fifo', 'unix']
       - smsshell__message_parser in ['json']
-      - smsshell__transmitter_type in ['stdout']
+      - smsshell__transmitter_type in ['stdout', 'python_gammu']
       - smsshell__log_level in ['ERROR', 'WARN', 'INFO', 'DEBUG', 'INFO']

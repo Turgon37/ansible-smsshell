@@ -11,6 +11,8 @@
   user:
     name:       '{{ smsshell__service_user }}'
     group:      '{{ smsshell__service_group }}'
+    groups:     '{{ smsshell__service_group_users }}'
+    append:     yes
     shell:      /sbin/nologin
     home:       '{{ smsshell__service_var_directory }}'
     createhome: no
@@ -27,6 +29,13 @@
     state: directory
   with_items:
     - '{{ smsshell__service_var_directory }}'
+
+- name: Deploy python virtual env
+  pip:
+    requirements:       '{{ smsshell__install_pip_requirements_file }}'
+    virtualenv:         '{{ smsshell__service_virtual_env_directory }}'
+    virtualenv_command: '{{ smsshell__service_virtual_env_command }}'
+    state:              present
 
 - name: Create configuration file
   template:

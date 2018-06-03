@@ -31,5 +31,6 @@ session_ttl = {{ smsshell__session_ttl|int }}
 [receiver]
 path = {{ smsshell__receiver_path }}
 umask = {{ smsshell__receiver_umask }}
+group = {{ smsshell__receiver_group }}
 listen_queue = {{ smsshell__receiver_listen_queue }}
 {% endif %}

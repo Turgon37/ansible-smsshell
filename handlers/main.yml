@@ -3,6 +3,6 @@
 
 - name: restart-smsshell
   service:
-    name:  '{{ smsshell__service_name }}'
+    name: '{{ smsshell__service_name }}'
     state: restarted
   when: smsshell__service_enabled|bool

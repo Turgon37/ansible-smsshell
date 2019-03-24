@@ -12,10 +12,11 @@ content=dict()
 
 version_re = re.compile('version\s+v(?P<version>(?P<major>[0-9]+)[^ ]+)')
 try:
-    if not os.path.isfile(smsshell_exec):
-        content['error'] = 'executable {} does not exists'.format(smsshell_exec)
+    exec_path = smsshell_exec.split()
+    if exec_path and not os.path.isfile(exec_path[0]):
+        content['error'] = 'executable {} does not exists'.format(exec_path[0])
     else:
-        result = subprocess.check_output([smsshell_exec, '--version'], universal_newlines=True)
+        result = subprocess.check_output(exec_path + ['--version'], universal_newlines=True)
         match = version_re.search(result.strip())
         if match:
             content['version_full'] = match.group('version')

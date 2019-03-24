@@ -3,8 +3,8 @@
 - name: Assert required variables
   assert:
     that:
-      - smsshell__mode in ['standalone', 'daemon']
-      - smsshell__receiver_type in ['fifo', 'unix']
-      - smsshell__message_parser in ['json']
-      - smsshell__transmitter_type in ['stdout', 'python_gammu']
-      - smsshell__log_level in ['ERROR', 'WARN', 'INFO', 'DEBUG', 'INFO']
+      - smsshell__parameters['main.mode'] in ['DAEMON']
+      - smsshell__parameters['daemon.receiver_type'] in ['fifo', 'unix']
+      - smsshell__parameters['daemon.message_parser'] in ['json']
+      - smsshell__parameters['daemon.transmitter_type'] in ['stdout', 'python_gammu']
+      - smsshell__parameters['main.log_level'] in ['ERROR', 'WARN', 'INFO', 'DEBUG', 'INFO']

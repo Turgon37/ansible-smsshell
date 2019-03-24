@@ -18,18 +18,23 @@
   when: ansible_service_mgr != 'systemd'
   tags: ['always']
 
-- import_tasks: init.yml
+- name: Importing initialization tasks
+  import_tasks: init.yml
   tags: ['always']
 
-- import_tasks: install.yml
+- name: Importing install tasks
+  import_tasks: install.yml
   tags: ['smsshell', 'smsshell-install']
 
-- import_tasks: configure.yml
+- name: Import configuration tasks
+  import_tasks: configure.yml
   tags: ['smsshell', 'smsshell-configure']
 
-- import_tasks: service.yml
+- name: Importing service tasks
+  import_tasks: service.yml
   tags: ['smsshell', 'smsshell-service']
 
-- include_tasks: facts.yml
+- name: Optionally importing facts tasks
+  include_tasks: facts.yml
   when: smsshell__facts|bool
   tags: ['smsshell', 'smsshell-facts']

@@ -2,16 +2,18 @@
 
 - name: Create custom fact directory
   file:
-    path:  "{{ facts__dir|d('/etc/ansible/facts.d') }}"
+    path: "{{ facts__dir|d('/etc/ansible/facts.d') }}"
     owner: root
     group: root
-    mode:  0755
+    mode: 0755
     state: directory
+  tags: ['smsshell', 'smsshell-facts']
 
 - name: Insert custom fact file
   template:
-    src:   smsshell.py.fact.j2
-    dest:  "{{ facts__dir|d('/etc/ansible/facts.d') }}/smsshell.fact"
+    src: smsshell.py.fact.j2
+    dest: "{{ facts__dir|d('/etc/ansible/facts.d') }}/smsshell.fact"
     owner: root
     group: root
-    mode:  0755
+    mode: 0755
+  tags: ['smsshell', 'smsshell-facts']

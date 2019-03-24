@@ -11,6 +11,6 @@ galaxy_info:
         - 8
   galaxy_tags:
     - smsshell
-    - gammu-smsd
+    - gammusmsd
 
 dependencies: []

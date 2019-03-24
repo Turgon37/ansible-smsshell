@@ -1,11 +1,8 @@
 ---
 # defaults file for smsshell
 
-# Simple placeholder to allow other roles to detect this role
-smsshell__role: True
-
-# Enable facts deploiement
-smsshell__facts: True
+# Enable fact deployment
+smsshell__facts: true
 
 
 ### INSTALL CONFIGURATION
@@ -14,6 +11,7 @@ smsshell__facts: True
 smsshell__packages_names:
   - git
   - libgammu-dev
+  - python-setuptools
   - python3
   - python3-dev
   - python3-virtualenv
@@ -31,10 +29,11 @@ smsshell__install_path: /opt/SMSShell
 smsshell__install_pip_requirements_file: '{{ smsshell__install_path }}/pip-requirements.txt'
 
 # Allow automatic git pull on each ansible run
-smsshell__git_update: False
+smsshell__git_update: false
 
 
 ### SERVICE CONFIGURATION
+# ---------------------------------------
 # If theses options are defined the program's
 # privileges will be downgrade to this user and group rights
 # User to run smsshell as
@@ -49,14 +48,14 @@ smsshell__service_group_users:
 
 # Use service user/group (above) default user on service start
 # If set to False, the service must be started with root privileges
-smsshell__run_service_as_native_user: True
+smsshell__run_service_as_native_user: true
 
 # The name of the service to use
 smsshell__service_name: smsshell
 
 # If true, the service will be enabled and started
 # otherwise, it will be disabled and stopped
-smsshell__service_enabled: True
+smsshell__service_enabled: true
 
 # Path to service executable
 smsshell__executable: '{{ smsshell__service_virtual_env_directory }}/bin/python3 {{ smsshell__install_path }}/bin/sms-shell-launcher'
@@ -80,64 +79,89 @@ smsshell__service_pidfile: '{{ smsshell__service_run_directory }}/smsshell.pid'
 smsshell__configuration_file_path: /etc/smsshell.conf
 
 
-### GENERAL CONFIGURATION
-# Main fonctionnal mode in (daemon, standalone)
-smsshell__mode: daemon
+### SMS SHELL CONFIGURATION
+# ---------------------------------------
 
-# Set LOG level for message filtering in
-#  ERROR, WARN, INFO, DEBUG, INFO
-# Be careful, at debug level, some sensible message (such as passwords)
-#  can be logged
-smsshell__log_level: INFO
+# Default SMSShell parameters
+smsshell__parameters_defaults:
+  # Main fonctionnal mode in (daemon, standalone)
+  main.mode: DAEMON
 
-# Set LOG target in
-#  SYSLOG, STDERR, STDOUT, 'A path to a file'
-smsshell__log_target: STDOUT
+  main.pid: '{{ smsshell__service_pidfile }}'
+  main.user: '{{ smsshell__service_user }}'
+  main.group: '{{ smsshell__service_group }}'
 
-# The log format. See https://docs.python.org/3/library/logging.html#logrecord-attributes for available tokens
-# Don't forget to escape percent with a double percent
-#smsshell__log_format: %%(name)s[%%(process)d]: %%(levelname)s %%(message)s
+  # Set LOG level for message filtering in
+  #  ERROR, WARN, INFO, DEBUG, INFO
+  # Be careful, at debug level, some sensible message (such as passwords)
+  #  can be logged
+  main.log_level: INFO
 
+  # Set LOG target in
+  #  SYSLOG, STDERR, STDOUT, 'A path to a file'
+  main.log_target: STDOUT
 
-### DAEMON CONFIGURATION
-# The type of input message receiver in
-#  (unix,fifo)
-smsshell__receiver_type: unix
-
-# The type of output message transmitter in
-#  (stdout)
-smsshell__transmitter_type: python_gammu
-
-# The type of message parser, each message
-# received by the receiver will be parsed by this item.
-# in (json)
-smsshell__message_parser: json
-
-# Maximum lifetime of idle shell sessions
-smsshell__session_ttl: 600
+  # The log format.
+  # See https://docs.python.org/3/library/logging.html#logrecord-attributes for available tokens
+  # Don't forget to escape percent with a double percent
+  # main.log_format: %%(name)s[%%(process)d]: %%(levelname)s %%(message)s
 
 
-## RECEIVER CONFIGURATION
-# The path to the receiver file is required
-# For unix type : the path to the unix socket
-# For fifo type : the path to the fifo file
-smsshell__receiver_path: "{{ smsshell__service_run_directory }}/smsshell.{{ 'fifo' if smsshell__receiver_type == 'fifo' else 'sock' }}"
+  ### DAEMON CONFIGURATION
+  # The type of input message receiver in
+  #  (unix,fifo)
+  daemon.receiver_type: unix
 
-# The group that will own the receivers path
-# this allow another group to read/write using the receiver path
-# without to add it to the smsshell__service_group group
-smsshell__receiver_group: gammu
+  # The type of output message transmitter in
+  #  (stdout)
+  daemon.transmitter_type: python_gammu
 
-# Sockets listen queue
-# the number of unaccepted connections that the system will allow before refusing new connections.
-# This apply only on network/unix socket
-smsshell__receiver_listen_queue: 10
+  # The type of message parser, each message
+  # received by the receiver will be parsed by this item.
+  # in (json)
+  daemon.message_parser: json
 
-# The umask the daemon will use to create socket and fifo
-smsshell__receiver_umask: '0117'
+  # Maximum lifetime of idle shell sessions
+  daemon.session_ttl: 600
 
+  ## RECEIVER CONFIGURATION
+  # The path to the receiver file is required
+  # For unix type : the path to the unix socket
+  # For fifo type : the path to the fifo file
+  receiver.path: '{{ smsshell__service_run_directory }}/smsshell.sock'
 
-## TRANSMITTER CONFIGURATION
-# The path to the gammu-smsdrc configuration of the currently running
-# gammu-smsd daemon
-smsshell__transmitter_smsdrc_configuration: /etc/gammu-smsdrc
+  # The group that will own the receivers path
+  # this allow another group to read/write using the receiver path
+  # without to add it to the smsshell__service_group group
+  receiver.group: gammu
+
+  # Sockets listen queue
+  # the number of unaccepted connections that the system will allow before refusing new connections.
+  # This apply only on network/unix socket
+  receiver.listen_queue: 10
+
+  # The umask the daemon will use to create socket and fifo
+  receiver.umask: '0117'
+
+  ## TRANSMITTER CONFIGURATION
+  # The path to the gammu-smsdrc configuration of the currently running
+  # gammu-smsd daemon
+  transmitter.smsdrc_configuration: /etc/gammu-smsdrc
+
+# This variable is intended to be used in Ansible’s global inventory.
+smsshell__parameters_global: {}
+
+# This variable is intended to be used in a host inventory group of Ansible
+# (only one host group is supported).
+smsshell__parameters_group: {}
+
+# This variable is intended to be used in the inventory of hosts.
+smsshell__parameters_host: {}
+
+# Combine all customs parameters
+smsshell__parameters: '{{
+  smsshell__parameters_defaults
+  |combine(smsshell__parameters_global)
+  |combine(smsshell__parameters_group)
+  |combine(smsshell__parameters_host)
+}}'

@@ -12,7 +12,6 @@ RuntimeDirectory={{ smsshell__service_run_directory|basename }}
 {% endif %}
 PIDFile={{ smsshell__service_pidfile }}
 ExecStart={{ smsshell__executable }} --config-file={{ smsshell__configuration_file_path }} --pid-file={{ smsshell__service_pidfile }} --background
-#ExecReload=/bin/kill -HUP $MAINPID
 
 [Install]
 WantedBy=multi-user.target

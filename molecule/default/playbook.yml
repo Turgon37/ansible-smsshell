@@ -1,0 +1,9 @@
+---
+- name: Run role
+  hosts: all
+  any_errors_fatal: true
+  roles:
+    - role: ansible-smsshell
+  vars:
+    smsshell__repository_version: master
+    smsshell__service_group_users: []
